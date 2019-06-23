@@ -1,3 +1,6 @@
 [submodule "lib/shell-lib"]
 	path = lib/shell-lib
 	url = git@github.com:cjvirtucio87/shell-lib.git
+[submodule "app/lib/shell-lib"]
+	path = app/lib/shell-lib
+	url = git@github.com:cjvirtucio87/shell-lib.git
