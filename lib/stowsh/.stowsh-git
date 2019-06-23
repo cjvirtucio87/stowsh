@@ -1,4 +1,4 @@
-. "${PROJECT_DIR}/lib/.logging";
+. "${PROJECT_DIR}/lib/shell-lib/.logging";
 
 call_git() {
   local staging_dir

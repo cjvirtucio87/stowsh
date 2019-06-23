@@ -1,4 +1,4 @@
-. "${PROJECT_DIR}/lib/.logging";
+. "${PROJECT_DIR}/lib/shell-lib/.logging";
 
 clean() {
   local staging_dir

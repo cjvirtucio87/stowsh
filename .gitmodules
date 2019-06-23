@@ -1,0 +1,3 @@
+[submodule "lib/shell-lib"]
+	path = lib/shell-lib
+	url = git@github.com:cjvirtucio87/shell-lib.git
