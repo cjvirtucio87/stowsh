@@ -1,0 +1,29 @@
+. "${PROJECT_DIR}/lib/.logging";
+
+call_git() {
+  local staging_dir
+
+  if [ -f "${CONFIG_PATH}/staging_dir" ]; then
+    log_debug "using staging_dir ${staging_dir}";
+    staging_dir="$(cat $CONFIG_PATH/staging_dir)";
+  else
+    log_error "no staging_dir file at ${CONFIG_PATH}/staging_dir";
+    exit 1;
+  fi
+
+  if [ -d "${staging_dir}/git/dotfiles" ]; then
+    log_debug "found dotfiles at ${staging_dir}/git/dotfiles";
+  else 
+    log_error "no dotfiles at ${staging_dir}/git/dotfiles";
+    exit 1;
+  fi
+
+  local git_path;
+  git_path="$(which git)";
+
+  log_debug "passing args to ${git_path} in your dotfiles folder";
+
+  cd "${staging_dir}/git/dotfiles";
+  
+  "${git_path}" "$@";
+}

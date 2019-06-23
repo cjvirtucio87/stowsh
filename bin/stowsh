@@ -1,0 +1,73 @@
+#!/bin/bash
+
+CONFIG_PATH="${HOME}/.stowsh";
+DOTFILES_URL="${DOTFILES_URL:-git@github.com:your_usr_name/dotfiles.git}";
+DOTFILES_PLATFORM="${DOTFILES_PLATFORM:-ubuntu}";
+PROJECT_DIR="$(dirname $0)/../..";
+LOG_LEVEL="${LOG_LEVEL:-INFO}";
+DOTFILES_DEPLOY_DIR="${DOTFILES_DEPLOY_DIR:-/mnt/c/Users/cjv28}";
+
+read -r -d '' STOWSH_USAGE <<'EOF'
+stowsh
+[summary]
+Command for managing your dotfiles.
+
+[description]
+This is a command-line tool for managing dotfiles.
+
+Available subcommands:
+- install (install your dotfiles)
+- git (pass-thru to git on your cloned dotfiles)
+- update (copy your dotfiles back to your cloned dotfiles location)
+
+[usage]
+- View this help message:
+stowsh -h
+
+- Execute with a log level of DEBUG:
+LOG_LEVEL=debug stowsh
+EOF
+
+. "${PROJECT_DIR}/lib/.logging";
+. "${PROJECT_DIR}/stowsh/lib/.stowsh-git";
+. "${PROJECT_DIR}/stowsh/lib/.stowsh-install";
+. "${PROJECT_DIR}/stowsh/lib/.stowsh-update";
+
+main() {
+  log_debug "validating required variables";
+
+  if [ ! -d "${HOME}" ]; then
+    log-error "HOME, ${HOME}, does not exist";
+    exit 1;
+  fi
+
+  if [ ! -d "${DOTFILES_DEPLOY_DIR}" ]; then
+    log_error "DOTFILES_DEPLOY_DIR, ${DOTFILES_DEPLOY_DIR}, does not exist";
+    exit 1;
+  fi
+
+  local subcommand=$1;
+  shift;
+
+  case "${subcommand}" in
+    'git')
+      call_git "$@";
+      ;;
+    'install')
+      install "$@";
+      ;;
+    'update')
+      update "$@";
+      ;;
+    '-h' | '--help')
+      echo "${STOWSH_USAGE}";
+      exit 0;
+      ;;
+    *)
+      log_error "invalid subcommand, ${subcommand}";
+      exit 1;
+      ;;
+  esac
+}
+
+main "$@";

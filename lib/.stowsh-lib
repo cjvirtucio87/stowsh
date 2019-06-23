@@ -1,0 +1,45 @@
+. "${PROJECT_DIR}/lib/.logging";
+
+clean() {
+  local staging_dir
+
+  if [ -d "${CONFIG_PATH}" ]; then
+    if [ -f "${CONFIG_PATH}/staging_dir" ]; then
+      staging_dir="$(cat $CONFIG_PATH/staging_dir)";
+
+      if [ -d "${staging_dir}" ]; then
+        log_debug "cleaning staging_dir, ${staging_dir}";
+
+        rm -rf "${staging_dir}";
+      else
+        log_warn "staging_dir, ${staging_dir}, does not exist; skipping removal";
+      fi
+    else
+      log_warn "staging_dir file at ${CONFIG_PATH}/staging_dir does not exist; skipping removal";
+    fi
+
+    log_debug "cleaning config directory, ${CONFIG_PATH}";
+    rm -rf "${CONFIG_PATH}";
+  else
+    log_warn "used --clean-pre/--clean-post flag when directory ${CONFIG_PATH} does not exist; skipping removal";
+  fi
+}
+
+deploy_dotfiles() {
+  local src_dir=$1;
+  local dest_dir=$2;  
+  local excludes=$3;
+
+  rsync -av "${excludes}" $src_dir/.[^.]* "${dest_dir}";
+}
+
+symlink_to_src() {
+  local src_dir=$1;
+  local dest_dir=$2;
+
+  find $src_dir \
+    -maxdepth 1 \
+    -mindepth 1 \
+    -name '.*' \
+    -exec bash -c "symlink_name=\"${dest_dir}/\$(basename {})\"; if [ ! -L \"\${symlink_name}\" ]; then ln -s {} \"\${symlink_name}\"; fi" \;
+}

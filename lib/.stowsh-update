@@ -1,0 +1,49 @@
+read -r -d '' UPDATE_USAGE <<'EOF'
+stowsh update
+[summary]
+stowsh subcommand for updating your dotfiles.
+
+[description]
+Update your dotfiles by copying them back from the $DOTFILES_DEPLOY_DIR to the $DOTFILES_PLATFORM of 
+your git repo. Note that your dotfiles must already have been cloned using the stowsh install
+subcommand into a staging directory, and that this staging directory was not removed.
+
+[usage]
+- View this help message:
+stowsh update -h
+
+- Execute with a log level of DEBUG:
+LOG_LEVEL=debug stowsh update
+EOF
+
+. "${PROJECT_DIR}/stowsh/lib/.stowsh-lib";
+
+update() {
+  while (( "$#" )); do
+    case "$1" in
+      '-h' | '--help')
+        echo "${UPDATE_USAGE}";
+        exit 0;
+        ;;
+      *)
+    esac
+  done
+
+  local staging_dir;
+
+  if [ -f "${CONFIG_PATH}/staging_dir" ]; then
+    log_debug "using staging_dir ${staging_dir}";
+    staging_dir="$(cat $CONFIG_PATH/staging_dir)";
+  else
+    log_error "no staging_dir file at ${CONFIG_PATH}/staging_dir";
+    exit 1;
+  fi
+
+  local dest_dir="${staging_dir}/git/dotfiles/${DOTFILES_PLATFORM}";
+
+  log_debug "copying dotfiles from ${dest_dir} back to ${DOTFILES_DEPLOY_DIR}";
+
+  local excludes=$(echo $(cat ${staging_dir}/git/dotfiles/.gitignore | awk '$1 !~ /^#/ {print "--exclude=" $1}') | tr '\n' ' ');
+
+  deploy_dotfiles "${DOTFILES_DEPLOY_DIR}" "${dest_dir}" "${excludes}"; 
+}
