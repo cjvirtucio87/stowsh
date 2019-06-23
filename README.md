@@ -13,12 +13,13 @@ Currently only supports `Ubuntu 18.04 (Bionic Beaver)`.
 
 ## Setup
 
-Install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+Download one of the [releases](stowsh/releases).
 
-Clone this repo.
+Unarchive to wherever, e.g. `/opt/stowsh-0.1.0`.
 
 Make sure the required environment variables are setup correctly; specifically:
 
+* `$PATH` must be set to `/your/stowsh/install/bin:${PATH}`
 * `$HOME` must point to your home directory.
 * `$DOTFILES_URL` must point to your remote repo.
 * `$DOTFILES_PLATFORM` must point to your desired platform _within_ your dotfiles repo.
