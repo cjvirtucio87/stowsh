@@ -18,16 +18,20 @@ set -e
 ### - Execute with a log level of DEBUG:
 ### LOG_LEVEL=debug stowsh
 
-CONFIG_PATH="${HOME}/.stowsh"
+readonly CONFIG_PATH="${HOME}/.stowsh"
+readonly PROJECT_DIR="$(dirname "$0")/.."
 DOTFILES_URL="${DOTFILES_URL:-git@github.com:your_usr_name/dotfiles.git}"
 DOTFILES_PLATFORM="${DOTFILES_PLATFORM:-ubuntu}"
-PROJECT_DIR="$(dirname $0)/.."
 LOG_LEVEL="${LOG_LEVEL:-INFO}"
-DOTFILES_DEPLOY_DIR="${DOTFILES_DEPLOY_DIR:-/mnt/c/Users/cjv28}"
+DOTFILES_DEPLOY_DIR="${DOTFILES_DEPLOY_DIR:-"/mnt/c/Users/$(whoami)"}"
 
+# shellcheck disable=SC1090
 . "${PROJECT_DIR}/lib/shell-lib/.logging"
+# shellcheck disable=SC1090
 . "${PROJECT_DIR}/lib/stowsh/.stowsh-git"
+# shellcheck disable=SC1090
 . "${PROJECT_DIR}/lib/stowsh/.stowsh-install"
+# shellcheck disable=SC1090
 . "${PROJECT_DIR}/lib/stowsh/.stowsh-update"
 
 main() {
