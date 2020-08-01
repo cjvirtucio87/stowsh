@@ -83,7 +83,8 @@ install() {
 
   log_debug "deploying dotfiles from ${platform_staging_dir} to ${DOTFILES_DEPLOY_DIR}"
 
-  deploy_dotfiles "${platform_staging_dir}" "${DOTFILES_DEPLOY_DIR}"
+  local excludes=(--exclude ".git")
+  deploy_dotfiles "${platform_staging_dir}" "${DOTFILES_DEPLOY_DIR}" "${excludes[@]}"
 
   log_debug "creating symlinks in ${HOME} to dotfiles in ${DOTFILES_DEPLOY_DIR}"
 
