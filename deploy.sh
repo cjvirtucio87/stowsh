@@ -2,6 +2,17 @@
 
 set -e
 
+### deploy.sh
+### [summary]
+### Script for creating and uploading releases.
+###
+### [description]
+### Script for creating and uploading releases. Requires .NET Core.
+###
+### [usage]
+### - Run the script:
+### ./deploy.sh
+
 readonly ROOT_DIR="$(readlink --canonicalize --no-newline "$(dirname "$0")")"
 readonly NET_TOOLS_DIR="${ROOT_DIR}/.net-tools"
 readonly NET_TOOLS_VERSION="3.2.31"
