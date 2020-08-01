@@ -1,47 +1,47 @@
 set -e;
 
-. "${PROJECT_DIR}/lib/shell-lib/.logging";
+. "${PROJECT_DIR}/lib/shell-lib/.logging"
 
 clean() {
   local staging_dir
 
   if [ -d "${CONFIG_PATH}" ]; then
     if [ -f "${CONFIG_PATH}/staging_dir" ]; then
-      staging_dir="$(cat $CONFIG_PATH/staging_dir)";
+      staging_dir="$(cat $CONFIG_PATH/staging_dir)"
 
       if [ -d "${staging_dir}" ]; then
-        log_debug "cleaning staging_dir, ${staging_dir}";
+        log_debug "cleaning staging_dir, ${staging_dir}"
 
-        rm -rf "${staging_dir}";
+        rm -rf "${staging_dir}"
       else
-        log_warn "staging_dir, ${staging_dir}, does not exist; skipping removal";
+        log_warn "staging_dir, ${staging_dir}, does not exist; skipping removal"
       fi
     else
-      log_warn "staging_dir file at ${CONFIG_PATH}/staging_dir does not exist; skipping removal";
+      log_warn "staging_dir file at ${CONFIG_PATH}/staging_dir does not exist; skipping removal"
     fi
 
-    log_debug "cleaning config directory, ${CONFIG_PATH}";
-    rm -rf "${CONFIG_PATH}";
+    log_debug "cleaning config directory, ${CONFIG_PATH}"
+    rm -rf "${CONFIG_PATH}"
   else
-    log_warn "used --clean-pre/--clean-post flag when directory ${CONFIG_PATH} does not exist; skipping removal";
+    log_warn "used --clean-pre/--clean-post flag when directory ${CONFIG_PATH} does not exist; skipping removal"
   fi
 }
 
 deploy_dotfiles() {
-  local src_dir=$1;
-  local dest_dir=$2;
-  shift;
-  shift;
-  local excludes=("$@");
+  local src_dir=$1
+  local dest_dir=$2
+  shift
+  shift
+  local excludes=("$@")
 
-  rsync -av "${excludes[@]}" "${src_dir}"/.[^.]* "${dest_dir}";
+  rsync -av "${excludes[@]}" "${src_dir}"/.[^.]* "${dest_dir}"
 }
 
 symlink_to_src() {
-  local src_dir=$1;
-  local dest_dir=$2;
-  local platform_staging_dir=$3;
-  local dry_run=$4;
+  local src_dir=$1
+  local dest_dir=$2
+  local platform_staging_dir=$3
+  local dry_run=$4
 
   for platform_staging_filepath in "${platform_staging_dir}"/.[^.]*; do
     local src_filepath="${src_dir}/$(basename "${platform_staging_filepath}")"

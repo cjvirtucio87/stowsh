@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e;
+set -e
 
 ### stowsh
 ### [summary]
@@ -18,49 +18,49 @@ set -e;
 ### - Execute with a log level of DEBUG:
 ### LOG_LEVEL=debug stowsh
 
-CONFIG_PATH="${HOME}/.stowsh";
-DOTFILES_URL="${DOTFILES_URL:-git@github.com:your_usr_name/dotfiles.git}";
-DOTFILES_PLATFORM="${DOTFILES_PLATFORM:-ubuntu}";
-PROJECT_DIR="$(dirname $0)/..";
-LOG_LEVEL="${LOG_LEVEL:-INFO}";
-DOTFILES_DEPLOY_DIR="${DOTFILES_DEPLOY_DIR:-/mnt/c/Users/cjv28}";
+CONFIG_PATH="${HOME}/.stowsh"
+DOTFILES_URL="${DOTFILES_URL:-git@github.com:your_usr_name/dotfiles.git}"
+DOTFILES_PLATFORM="${DOTFILES_PLATFORM:-ubuntu}"
+PROJECT_DIR="$(dirname $0)/.."
+LOG_LEVEL="${LOG_LEVEL:-INFO}"
+DOTFILES_DEPLOY_DIR="${DOTFILES_DEPLOY_DIR:-/mnt/c/Users/cjv28}"
 
-. "${PROJECT_DIR}/lib/shell-lib/.logging";
-. "${PROJECT_DIR}/lib/stowsh/.stowsh-git";
-. "${PROJECT_DIR}/lib/stowsh/.stowsh-install";
-. "${PROJECT_DIR}/lib/stowsh/.stowsh-update";
+. "${PROJECT_DIR}/lib/shell-lib/.logging"
+. "${PROJECT_DIR}/lib/stowsh/.stowsh-git"
+. "${PROJECT_DIR}/lib/stowsh/.stowsh-install"
+. "${PROJECT_DIR}/lib/stowsh/.stowsh-update"
 
 main() {
-  log_debug "validating required variables";
+  log_debug "validating required variables"
 
   if [ ! -d "${HOME}" ]; then
-    log-error "HOME, ${HOME}, does not exist";
-    exit 1;
+    log-error "HOME, ${HOME}, does not exist"
+    exit 1
   fi
 
   if [ ! -d "${DOTFILES_DEPLOY_DIR}" ]; then
-    log_error "DOTFILES_DEPLOY_DIR, ${DOTFILES_DEPLOY_DIR}, does not exist";
-    exit 1;
+    log_error "DOTFILES_DEPLOY_DIR, ${DOTFILES_DEPLOY_DIR}, does not exist"
+    exit 1
   fi
 
-  local subcommand=$1;
-  shift;
+  local subcommand=$1
+  shift
 
   case "${subcommand}" in
     'git')
-      call_git "$@";
+      call_git "$@"
       ;;
     'install')
-      install "$@";
+      install "$@"
       ;;
     'update')
-      update "$@";
+      update "$@"
       ;;
     *)
-      log_error "invalid subcommand, ${subcommand}";
-      exit 1;
+      log_error "invalid subcommand, ${subcommand}"
+      exit 1
       ;;
   esac
 }
 
-main "$@";
+main "$@"

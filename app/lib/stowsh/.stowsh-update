@@ -1,4 +1,4 @@
-set -e;
+set -e
 
 ### stowsh update
 ### [summary]
@@ -13,22 +13,22 @@ set -e;
 ### - Execute with a log level of DEBUG:
 ### LOG_LEVEL=debug stowsh update
 
-. "${PROJECT_DIR}/lib/stowsh/.stowsh-lib";
+. "${PROJECT_DIR}/lib/stowsh/.stowsh-lib"
 
 update() {
-  local staging_dir;
+  local staging_dir
 
   if [ -f "${CONFIG_PATH}/staging_dir" ]; then
-    log_debug "using staging_dir ${staging_dir}";
-    staging_dir="$(cat $CONFIG_PATH/staging_dir)";
+    log_debug "using staging_dir ${staging_dir}"
+    staging_dir="$(cat $CONFIG_PATH/staging_dir)"
   else
-    log_error "no staging_dir file at ${CONFIG_PATH}/staging_dir";
-    exit 1;
+    log_error "no staging_dir file at ${CONFIG_PATH}/staging_dir"
+    exit 1
   fi
 
-  local dest_dir="${staging_dir}/git/dotfiles/${DOTFILES_PLATFORM}";
+  local dest_dir="${staging_dir}/git/dotfiles/${DOTFILES_PLATFORM}"
 
-  log_debug "copying dotfiles from ${dest_dir} back to ${DOTFILES_DEPLOY_DIR}";
+  log_debug "copying dotfiles from ${dest_dir} back to ${DOTFILES_DEPLOY_DIR}"
 
   local excludes=()
   readarray -t patterns < "${staging_dir}/git/dotfiles/.gitignore"
@@ -39,5 +39,5 @@ update() {
     fi
   done
 
-  deploy_dotfiles "${DOTFILES_DEPLOY_DIR}" "${dest_dir}" "${excludes[@]}";
+  deploy_dotfiles "${DOTFILES_DEPLOY_DIR}" "${dest_dir}" "${excludes[@]}"
 }
