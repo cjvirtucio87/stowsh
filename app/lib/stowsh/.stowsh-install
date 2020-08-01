@@ -1,3 +1,5 @@
+set -e;
+
 read -r -d '' INSTALL_USAGE <<'EOF'
 stowsh install
 [summary]
@@ -39,7 +41,7 @@ install() {
         shift;
         ;;
       '-h' | '--help')
-        echo "${INSTALL_USAGE}";
+        less < <(echo "${INSTALL_USAGE}");
         exit 0;
         ;;
       *)

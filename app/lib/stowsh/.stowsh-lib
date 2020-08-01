@@ -1,3 +1,5 @@
+set -e;
+
 . "${PROJECT_DIR}/lib/shell-lib/.logging";
 
 clean() {
@@ -41,5 +43,5 @@ symlink_to_src() {
     -maxdepth 1 \
     -mindepth 1 \
     -name '.*' \
-    -exec bash -c "symlink_name=\"${dest_dir}/\$(basename {})\"; if [ ! -L \"\${symlink_name}\" ]; then ln -s {} \"\${symlink_name}\"; fi" \;
+    -exec bash -c "symlink_name=\"${dest_dir}/\$(basename {})\"; if [[ ! -f \"\${symlink_name}\" ]] && [[ ! -d \"\${symlink_name}\" ]]; then ln -s {} \"\${symlink_name}\"; fi" \;
 }

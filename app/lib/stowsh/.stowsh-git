@@ -1,3 +1,5 @@
+set -e;
+
 . "${PROJECT_DIR}/lib/shell-lib/.logging";
 
 call_git() {
