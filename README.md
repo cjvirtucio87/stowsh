@@ -26,11 +26,3 @@ Make sure the required environment variables are setup correctly; specifically:
 * `$DOTFILES_DEPLOY_DIR` must point to where you want your dotfiles to be deployed.
 
 The script has defaults that could possibly serve as examples. They're currently setup to run on my machine (`Ubuntu 18.04` on `WSL`).
-
-## Usage
-See the help message for more information:
-
-```
-stowsh -h
-```
-

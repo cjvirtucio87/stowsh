@@ -30,8 +30,11 @@ clean() {
 deploy_dotfiles() {
   local src_dir=$1;
   local dest_dir=$2;
+  shift;
+  shift;
+  local excludes=("$@");
 
-  rsync -av "${src_dir}"/.[^.]* "${dest_dir}";
+  rsync -av "${excludes[@]}" "${src_dir}"/.[^.]* "${dest_dir}";
 }
 
 symlink_to_src() {

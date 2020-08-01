@@ -30,7 +30,14 @@ update() {
 
   log_debug "copying dotfiles from ${dest_dir} back to ${DOTFILES_DEPLOY_DIR}";
 
-  local excludes=$(echo $(cat ${staging_dir}/git/dotfiles/.gitignore | awk '$1 !~ /^#/ {print "--exclude=" $1}') | tr '\n' ' ');
+  local excludes=()
+  readarray -t patterns < "${staging_dir}/git/dotfiles/.gitignore"
 
-  deploy_dotfiles "${DOTFILES_DEPLOY_DIR}" "${dest_dir}" "${excludes}";
+  for pattern in "${patterns[@]}"; do
+    if [[ !  "${pattern}" =~ ^# ]] && [[ -n "${pattern}" ]]; then
+      excludes+=(--exclude "${pattern}")
+    fi
+  done
+
+  deploy_dotfiles "${DOTFILES_DEPLOY_DIR}" "${dest_dir}" "${excludes[@]}";
 }
