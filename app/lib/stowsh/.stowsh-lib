@@ -29,19 +29,27 @@ clean() {
 
 deploy_dotfiles() {
   local src_dir=$1;
-  local dest_dir=$2;  
-  local excludes=$3;
+  local dest_dir=$2;
 
-  rsync -av "${excludes}" $src_dir/.[^.]* "${dest_dir}";
+  rsync -av "${src_dir}"/.[^.]* "${dest_dir}";
 }
 
 symlink_to_src() {
   local src_dir=$1;
   local dest_dir=$2;
+  local platform_staging_dir=$3;
+  local dry_run=$4;
 
-  find $src_dir \
-    -maxdepth 1 \
-    -mindepth 1 \
-    -name '.*' \
-    -exec bash -c "symlink_name=\"${dest_dir}/\$(basename {})\"; if [[ ! -f \"\${symlink_name}\" ]] && [[ ! -d \"\${symlink_name}\" ]]; then ln -s {} \"\${symlink_name}\"; fi" \;
+  for platform_staging_filepath in "${platform_staging_dir}"/.[^.]*; do
+    local src_filepath="${src_dir}/$(basename "${platform_staging_filepath}")"
+    local dest_filepath="${dest_dir}/$(basename "${platform_staging_filepath}")"
+    log_debug "creating symlink from [${src_filepath}] to [${dest_filepath}]"
+    if [[ -n "${dry_run}" ]]; then
+      continue;
+    fi
+
+    if [[ ! -f "${dest_filepath}" ]] && [[ ! -d "${dest_filepath}" ]] && [[ ! -L "${dest_filepath}" ]]; then
+      ln -s "${src_filepath}" "${dest_filepath}"
+    fi
+  done
 }

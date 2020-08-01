@@ -1,34 +1,33 @@
 set -e;
 
-read -r -d '' INSTALL_USAGE <<'EOF'
-stowsh install
-[summary]
-stowsh subcommand for installing your dotfiles.
-
-[description]
-Install your dotfiles by cloning them from $DOTFILES_URL, copying the files in the $DOTFILES_PLATFORM of 
-your project, and deploying them to $DOTFILES_DEPLOY_DIR. Then, create symbolic links in your $HOME directory
-pointing to the files in your $DOTFILES_DEPLOY_DIR.
-
-[usage]
-- View this help message:
-stowsh install -h
-
-- Clean up the $HOME/.stowsh folder before executing:
-stowsh install -c
-
-- Clean up the $HOME/.stowsh folder after executing:
-stowsh install -d
-
-- Execute with a log level of DEBUG:
-LOG_LEVEL=debug stowsh install
-EOF
+### stowsh install
+### [summary]
+### stowsh subcommand for installing your dotfiles.
+###
+### [description]
+### Install your dotfiles by cloning them from $DOTFILES_URL, copying the files in the $DOTFILES_PLATFORM of
+### your project, and deploying them to $DOTFILES_DEPLOY_DIR. Then, create symbolic links in your $HOME directory
+### pointing to the files in your $DOTFILES_DEPLOY_DIR.
+###
+### [usage]
+### - View this help message:
+### stowsh install -h
+###
+### - Clean up the $HOME/.stowsh folder before executing:
+### stowsh install -c
+###
+### - Clean up the $HOME/.stowsh folder after executing:
+### stowsh install -d
+###
+### - Execute with a log level of DEBUG:
+### LOG_LEVEL=debug stowsh install
 
 . "${PROJECT_DIR}/lib/stowsh/.stowsh-lib";
 
 install() {
   local clean_post
   local clean_pre
+  local dry_run
 
   while (( "$#" )); do
     case "$1" in
@@ -40,9 +39,9 @@ install() {
         clean_pre=1;
         shift;
         ;;
-      '-h' | '--help')
-        less < <(echo "${INSTALL_USAGE}");
-        exit 0;
+      '--dry-run')
+        dry_run=1;
+        shift;
         ;;
       *)
     esac
@@ -72,21 +71,26 @@ install() {
     log_debug "created staging_dir file with staging_dir, ${staging_dir}";
   fi
 
+  if ! git ls-remote "${DOTFILES_URL}"; then
+    log_error "Invalid DOTFILES_URL: ${DOTFILES_URL}";
+    exit 1;
+  fi
+
   if [ -d "${staging_dir}/git/dotfiles" ]; then
     log_debug "${CONFIG_PATH}/git/dotfiles already exists; skipping cloning";
-  else 
+  else
     git clone "${DOTFILES_URL}" "${staging_dir}/git/dotfiles";
   fi
 
-  local src_dir="${staging_dir}/git/dotfiles/${DOTFILES_PLATFORM}";
+  local platform_staging_dir="${staging_dir}/git/dotfiles/${DOTFILES_PLATFORM}";
 
-  log_debug "deploying dotfiles from ${src_dir} to ${DOTFILES_DEPLOY_DIR}";
+  log_debug "deploying dotfiles from ${platform_staging_dir} to ${DOTFILES_DEPLOY_DIR}";
 
-  deploy_dotfiles "${src_dir}" "${DOTFILES_DEPLOY_DIR}";
+  deploy_dotfiles "${platform_staging_dir}" "${DOTFILES_DEPLOY_DIR}";
 
   log_debug "creating symlinks in ${HOME} to dotfiles in ${DOTFILES_DEPLOY_DIR}";
 
-  symlink_to_src "${DOTFILES_DEPLOY_DIR}" "${HOME}";
+  symlink_to_src "${DOTFILES_DEPLOY_DIR}" "${HOME}" "${platform_staging_dir}" "${dry_run}";
 
   if [ -n "${clean_post}" ]; then
     log_debug "cleaning after install";

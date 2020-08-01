@@ -1,36 +1,24 @@
 set -e;
 
-read -r -d '' UPDATE_USAGE <<'EOF'
-stowsh update
-[summary]
-stowsh subcommand for updating your dotfiles.
-
-[description]
-Update your dotfiles by copying them back from the $DOTFILES_DEPLOY_DIR to the $DOTFILES_PLATFORM of 
-your git repo. Note that your dotfiles must already have been cloned using the stowsh install
-subcommand into a staging directory, and that this staging directory was not removed.
-
-[usage]
-- View this help message:
-stowsh update -h
-
-- Execute with a log level of DEBUG:
-LOG_LEVEL=debug stowsh update
-EOF
+### stowsh update
+### [summary]
+### stowsh subcommand for updating your dotfiles.
+###
+### [description]
+### Update your dotfiles by copying them back from the $DOTFILES_DEPLOY_DIR to the $DOTFILES_PLATFORM of
+### your git repo. Note that your dotfiles must already have been cloned using the stowsh install
+### subcommand into a staging directory, and that this staging directory was not removed.
+###
+### [usage]
+### - View this help message:
+### stowsh update -h
+###
+### - Execute with a log level of DEBUG:
+### LOG_LEVEL=debug stowsh update
 
 . "${PROJECT_DIR}/lib/stowsh/.stowsh-lib";
 
 update() {
-  while (( "$#" )); do
-    case "$1" in
-      '-h' | '--help')
-        echo "${UPDATE_USAGE}";
-        exit 0;
-        ;;
-      *)
-    esac
-  done
-
   local staging_dir;
 
   if [ -f "${CONFIG_PATH}/staging_dir" ]; then
@@ -47,5 +35,5 @@ update() {
 
   local excludes=$(echo $(cat ${staging_dir}/git/dotfiles/.gitignore | awk '$1 !~ /^#/ {print "--exclude=" $1}') | tr '\n' ' ');
 
-  deploy_dotfiles "${DOTFILES_DEPLOY_DIR}" "${dest_dir}" "${excludes}"; 
+  deploy_dotfiles "${DOTFILES_DEPLOY_DIR}" "${dest_dir}" "${excludes}";
 }
