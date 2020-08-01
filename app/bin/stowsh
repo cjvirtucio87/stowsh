@@ -15,9 +15,6 @@ set -e;
 ### - update (copy your dotfiles back to your cloned dotfiles location)
 ###
 ### [usage]
-### - View this help message:
-### stowsh -h
-###
 ### - Execute with a log level of DEBUG:
 ### LOG_LEVEL=debug stowsh
 

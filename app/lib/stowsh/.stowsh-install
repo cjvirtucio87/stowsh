@@ -10,9 +10,6 @@ set -e;
 ### pointing to the files in your $DOTFILES_DEPLOY_DIR.
 ###
 ### [usage]
-### - View this help message:
-### stowsh install -h
-###
 ### - Clean up the $HOME/.stowsh folder before executing:
 ### stowsh install -c
 ###

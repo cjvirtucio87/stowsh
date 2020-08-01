@@ -10,9 +10,6 @@ set -e;
 ### subcommand into a staging directory, and that this staging directory was not removed.
 ###
 ### [usage]
-### - View this help message:
-### stowsh update -h
-###
 ### - Execute with a log level of DEBUG:
 ### LOG_LEVEL=debug stowsh update
 
